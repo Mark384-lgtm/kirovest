@@ -57,7 +57,7 @@ export default function AccountScreen() {
         Alert.alert("تم تسجيل الخروج", "تم تسجيل الخروج بنجاح.", [
             {
                 text: "حسنًا",
-                onPress: () => router.push("/login"),
+                onPress: () => router.replace("/login",{isLoggin:false}),
             },
         ]);
     };

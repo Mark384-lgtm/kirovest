@@ -9,6 +9,7 @@ import ProductsScreen from "../ProductsScreen";
 import OrderDetailsScreen from "../OrderDetailsScreen";
 import EditPriceScreen from "../EditPriceScreen";
 import AddScreen from "../screens/AddScreen";
+import Login from "../login";
 
 const Stack = createStackNavigator();
 
@@ -62,10 +63,15 @@ export default function RootNavigator() {
         component={EditPriceScreen}
         options={{ title: "تعديل سعر المنتج" }}
     />
-  <Stack.Screen name="AddScreen" 
+  <Stack.Screen 
+  name="AddScreen" 
   component={AddScreen}
-  
   />
+   <Stack.Screen 
+    name="Login" 
+    component={Login} 
+    options={{ headerShown: false }}
+        />
     
     </Stack.Navigator>
     

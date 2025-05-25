@@ -1438,24 +1438,7 @@ return (
 
           {userRole == "admin" && (
   <>
-    <Text style={styles.sectionHeader}>تصريح البيع</Text>
-    <View style={styles.fieldContainer}>
-      <View style={styles.pickerWrapper}>
-        <Picker
-          selectedValue={additionalFields.salePermission}
-          onValueChange={(value) =>
-            setAdditionalFields({
-              ...additionalFields,
-              salePermission: value,
-            })
-          }
-          style={styles.picker}
-        >
-          <Picker.Item label="يصرح" value="يصرح" />
-          <Picker.Item label="لا يصرح" value="لا يصرح" />
-        </Picker>
-      </View>
-    </View>
+    
   </>
 )}
 

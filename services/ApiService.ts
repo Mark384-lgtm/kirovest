@@ -37,9 +37,11 @@ export const getStoredToken = async (): Promise<string | null> => {
 
 export const clearAuthData = async () => {
     try {
+        console.log("بدأنا")
         await AsyncStorage.multiRemove([TOKEN_KEY, ROLE_KEY]);
         console.log("Successfully cleared auth data");
     } catch (error) {
+        console.log('انتهينا')
         console.error("Error clearing auth data:", error);
         throw error;
     }

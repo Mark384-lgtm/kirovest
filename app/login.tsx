@@ -16,21 +16,22 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Login() {
-  
+ 
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const segments = useSegments();
-  const { login, isLoggedIn, isLoading } = useAuth();
+  const { login, isLoggedIn, isLoading } = useAuth();//isLoggedIn مبقاش مستخدم بدخل في infinity loop
 
   // Redirect if already logged in
   useEffect(() => {
-    if (isLoggedIn && !isLoading) {
+    //use false instead of IsisLoggedIn
+    if (false && !isLoading) {
       router.replace("/");
     }
-  }, [isLoggedIn, isLoading]);
+  }, [false, isLoading]);
 
   const handleLogin = async () => {
     // Validation for email/username and password
