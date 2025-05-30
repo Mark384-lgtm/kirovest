@@ -45,7 +45,7 @@ export default function RouteScreen() {
           throw new Error("User not authenticated");
         }
 
-        const response = await fetch("https://kirovest.com/api/weekly_routes/weeks", {
+        const response = await fetch("https://kirovest.org/api/weekly_routes/weeks", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -84,7 +84,7 @@ export default function RouteScreen() {
         throw new Error("User not authenticated");
       }
 
-      const response = await fetch(`https://kirovest.com/api/weekly_routes/${weekId}`, {
+      const response = await fetch(`https://kirovest.org/api/weekly_routes/${weekId}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

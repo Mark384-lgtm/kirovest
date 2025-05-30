@@ -58,7 +58,7 @@ export default function OrdersScreen() {
       if (!token) throw new Error("User not authenticated");
 
       const response = await fetch(
-        `https://kirovest.com/api/orders?status=${status}`,
+        `https://kirovest.org/api/orders?status=${status}`,
         {
           method: "GET",
           headers: {
@@ -88,7 +88,7 @@ export default function OrdersScreen() {
 
       console.log("Accepting order:", orderId);
       const response = await fetch(
-        `https://kirovest.com/api/orders/${orderId}/update`,
+        `https://kirovest.org/api/orders/${orderId}/update`,
         {
           method: "POST",
           headers: {
@@ -133,7 +133,7 @@ export default function OrdersScreen() {
 
       console.log("Rejecting order:", orderId);
       const response = await fetch(
-        `https://kirovest.com/api/orders/${orderId}/update`,
+        `https://kirovest.org/api/orders/${orderId}/update`,
         {
           method: "POST",
           headers: {
@@ -260,7 +260,7 @@ export default function OrdersScreen() {
                       طلبية لـ {item.client.name}
                     </Text>
                     <Text style={styles.orderDetails}>
-                      📅 التاريخ: {item.date}
+                      📅 التاريخ: {item.appointment}
                     </Text>
                     <Text style={styles.orderDetails}>
                       📍 المدينة: {item.location}

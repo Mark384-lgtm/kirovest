@@ -7,7 +7,7 @@ import ClientsScreen from "../ClientsScreen";
 import RoutesScreen from "../RoutesScreen";
 import ProductsScreen from "../ProductsScreen";
 import OrderDetailsScreen from "../OrderDetailsScreen";
-import EditPriceScreen from "../EditPriceScreen";
+
 import AddScreen from "../screens/AddScreen";
 import Login from "../login";
 
@@ -58,11 +58,6 @@ export default function RootNavigator() {
       />
 
 
-      <Stack.Screen
-        name="EditPriceScreen"
-        component={EditPriceScreen}
-        options={{ title: "تعديل سعر المنتج" }}
-    />
   <Stack.Screen 
   name="AddScreen" 
   component={AddScreen}

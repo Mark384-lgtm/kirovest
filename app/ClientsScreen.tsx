@@ -44,7 +44,7 @@ export default function ClientsScreen() {
       const token = await getStoredToken();
       if (!token) throw new Error("User not authenticated");
 
-      const response = await fetch("https://kirovest.com/api/clients", {
+      const response = await fetch("https://kirovest.org/api/clients", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

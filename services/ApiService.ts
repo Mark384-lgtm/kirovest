@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = "https://kirovest.com/api";
+const BASE_URL = "https://kirovest.org/api";
 export const TOKEN_KEY = "auth_token";
 export const ROLE_KEY = "user_role";
 

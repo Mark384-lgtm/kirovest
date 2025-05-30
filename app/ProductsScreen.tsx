@@ -55,7 +55,7 @@ export default function ProductsScreen() {
       const token = await getStoredToken();
       if (!token) throw new Error("User not authenticated");
 
-      const response = await fetch("https://kirovest.com/api/services", {
+      const response = await fetch("https://kirovest.org/api/services", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

@@ -86,7 +86,7 @@ export default function HomeScreen() {
         }
 
         const response = await fetch(
-          "https://kirovest.com/api/orders?status=pending",
+          "https://kirovest.org/api/orders?status=pending",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -195,9 +195,9 @@ export default function HomeScreen() {
           <Text style={styles.menuText}>المنتجات</Text>
         </TouchableOpacity>
       </View>
-        <Text style={styles.DesignedbyText}> Designed by YWay.co.uk</Text>
+      <Text style={styles.DesignedbyText}> Designed by YWay.co.uk</Text>
     </View>
-    
+
   );
 }
 
@@ -318,12 +318,12 @@ const styles = StyleSheet.create({
     fontFamily: "Tajawal",
     fontWeight: "bold",
   },
-  DesignedbyText:{
-    position:"absolute",
-    alignSelf:"center",
-    bottom:150,
-    color:"#D3D3D3",
-    fontFamily:"Tajawal"
-    
+  DesignedbyText: {
+    position: "absolute",
+    alignSelf: "center",
+    bottom: 150,
+    color: "#D3D3D3",
+    fontFamily: "Tajawal"
+
   }
 });

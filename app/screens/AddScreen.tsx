@@ -2,6 +2,7 @@ import "react-native-get-random-values";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "@/types/navigation";
 import React, { useEffect, useState, useRef } from "react";
+import { DateTime } from 'luxon';
 import { useAuth } from "@/hooks/useAuth"; // adjust path if needed
 import {
   View,
@@ -18,6 +19,7 @@ import {
   SafeAreaView,
   Alert,
   Linking,
+  KeyboardAvoidingView
 } from "react-native";
 import {
   useNavigation,
@@ -26,7 +28,7 @@ import {
 } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
-import DateTimePicker from "@react-native-community/datetimepicker";
+
 import { Picker } from "@react-native-picker/picker";
 // Import MapView components conditionally to prevent crashes
 let MapView: any = null;
@@ -79,14 +81,14 @@ interface AdditionalFields {
   salePermission?: string;
 }
 
-export default function AddScreen({ route, navigation })  {
+export default function AddScreen({ route, navigation }) {
   const [step, setStep] = useState(1);
   const [client, setClient] = useState<number | string>("");
   const [clients, setClients] = useState<Client[]>([]);
   const { userRole } = useAuth();
   const [region, setRegion] = useState("");
-  const [date, setDate] = useState("");
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+
+
   const [product, setProduct] = useState<Product>({
     name: "",
     quantity: "",
@@ -181,7 +183,7 @@ export default function AddScreen({ route, navigation })  {
       const token = await getStoredToken();
       if (!token) throw new Error("User not authenticated");
 
-      const response = await fetch("https://kirovest.com/api/clients", {
+      const response = await fetch("https://kirovest.org/api/clients", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -215,7 +217,7 @@ export default function AddScreen({ route, navigation })  {
       const token = await getStoredToken();
       if (!token) throw new Error("User not authenticated");
 
-      const response = await fetch("https://kirovest.com/api/services", {
+      const response = await fetch("https://kirovest.org/api/services", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -245,7 +247,7 @@ export default function AddScreen({ route, navigation })  {
     }
   };
   const handleNext = () => {
-    if (step === 1 && (!client || !region || !date)) {
+    if (step === 1 && (!client || !region)) {
       Toast.show({
         type: "error",
         text1: "خطأ",
@@ -315,16 +317,11 @@ export default function AddScreen({ route, navigation })  {
     });
   };
 
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    setDatePickerVisible(false);
-    if (selectedDate) {
-      setDate(selectedDate.toLocaleDateString("en-US"));
-    }
-  };
+
 
   const handleSubmit = async () => {
     try {
-      if (!client || !region || !date || products.length === 0) {
+      if (!client || !region || products.length === 0) {
         Toast.show({
           type: "error",
           text1: "خطأ",
@@ -344,16 +341,24 @@ export default function AddScreen({ route, navigation })  {
         location: region,
         location_coordinates: selectedCoordinates
           ? {
-              latitude: selectedCoordinates.latitude,
-              longitude: selectedCoordinates.longitude,
-            }
+            latitude: selectedCoordinates.latitude,
+            longitude: selectedCoordinates.longitude,
+          }
           : null,
-        appointment: date,
-        services: products.map((item) => ({
-          service_id: item.id,
-          price: parseFloat(item.price),
-          quantity: parseInt(item.quantity),
-        })),
+          
+       appointment: DateTime.utc().setZone("Africa/Cairo"),
+        services: products.map((item) => {
+          console.log('Screen','AddScreen');
+          console.log('OrderPrice:', item.price); 
+          console.log('quantity', item.quantity);
+          console.log('total', item.value);
+          return {
+            service_id: item.id,
+            price: item.price,
+            quantity: parseInt(item.quantity),
+            
+          };
+        }),
         grand_total: totalValue,
         payment_method:
           additionalFields.paymentMethod === "نقدي" ? "cash" : "deferred",
@@ -365,9 +370,11 @@ export default function AddScreen({ route, navigation })  {
         sales_permit: additionalFields.salePermission === "يصرح" ? "yes" : "no",
       };
 
+    
+      console.log("💵 Grand Total:", requestData.grand_total);
       console.log("📤 Sending Request:", JSON.stringify(requestData));
 
-      const response = await fetch("https://kirovest.com/api/orders/make", {
+      const response = await fetch("https://kirovest.org/api/orders/make", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -418,6 +425,7 @@ export default function AddScreen({ route, navigation })  {
       });
     }
   };
+  
 
   const PreviewRow = ({
     label,
@@ -435,14 +443,14 @@ export default function AddScreen({ route, navigation })  {
   const OrderPreview = ({
     client,
     region,
-    date,
+
     products,
     totalValue,
     additionalFields,
   }: {
     client: string | number;
     region: string;
-    date: string;
+
     products: Product[];
     totalValue: number;
     additionalFields: AdditionalFields;
@@ -454,7 +462,7 @@ export default function AddScreen({ route, navigation })  {
         <Text style={styles.sectionHeader}>معلومات العميل</Text>
         <PreviewRow label="اسم العميل" value={client} />
         <PreviewRow label="المنطقة" value={region} />
-        <PreviewRow label="التاريخ" value={date} />
+
       </View>
 
       <View style={styles.previewSection}>
@@ -1042,7 +1050,7 @@ export default function AddScreen({ route, navigation })  {
         return true;
       }
 
-  
+
       // Default case for other platforms
       setLocationPermissionGranted(true);
       return true;
@@ -1053,7 +1061,7 @@ export default function AddScreen({ route, navigation })  {
     }
   };
 
-    const handlePriceUpdate = (newPrice) => {
+  const handlePriceUpdate = (newPrice) => {
     console.log("السعر الجديد:", newPrice);
     setProduct((prev) => ({
       ...prev,
@@ -1104,6 +1112,10 @@ export default function AddScreen({ route, navigation })  {
     );
   };
 
+  function handlePriceChange(text: string): void {
+    product.price = text
+  }
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -1135,16 +1147,6 @@ export default function AddScreen({ route, navigation })  {
 
           {renderRegionField()}
 
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>التاريخ</Text>
-            <TouchableOpacity
-              onPress={() => setDatePickerVisible(true)}
-              style={styles.dateField}
-            >
-              <Text style={styles.dateText}>{date || "اختر التاريخ"}</Text>
-              <Icon name="calendar" size={20} color="#0066b3" />
-            </TouchableOpacity>
-          </View>
           <Text style={styles.DesignedbyText}>Designed by YWay.co.uk</Text>
         </>
       )}
@@ -1175,62 +1177,61 @@ export default function AddScreen({ route, navigation })  {
 
           //const navigation = useNavigation();
 
-return (
-  <>
-    {product.name && (
-      <>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>اسم الصنف</Text>
-          <TextInput
-            style={[styles.input, styles.disabledInput]}
-            value={product.name}
-            editable={false}
-          />
-        </View>
+          return (
+          <>
+            {product.name && (
+              <>
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.label}>سعر المنتج الاصلي  </Text>
+                  <TextInput
+                    style={[styles.input, styles.disabledInput]}
+                    value={product.price}
+                    editable={false}
+                  />
+                </View>
 
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>السعر</Text>
-          <TouchableOpacity onPress={() =>  navigation.navigate("EditPriceScreen", {
-            product,
-            onSave: handlePriceUpdate
-          })}>
-            <TextInput
-              style={[styles.input, styles.editableLook]}
-              value={`${product.price} جنيه`}
-              editable={false}
-              pointerEvents="none"
-            />
-          </TouchableOpacity>
-          <Text style={styles.hintText}>اضغط للتعديل</Text>
-          
-        </View>
-      </>
-    )}
-  </>
-);
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.label}>تعديل سعر المنتج في الطلبية  (اختياري) </Text>
 
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>الكمية</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              value={product.quantity}
-              onChangeText={handleQuantityChange}
-              placeholder="ادخل الكمية"
-              placeholderTextColor="#aaa"
-            />
-          </View>
+                  <TextInput
+                    style={styles.input}
+                    keyboardType="numeric"
 
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>الملاحظات</Text>
-            <TextInput
-              style={styles.input}
-              value={product.notes}
-              onChangeText={(text) => setProduct({ ...product, notes: text })}
-              placeholder="ادخل الملاحظات"
-              placeholderTextColor="#aaa"
-            />
-          </View>
+                    onChangeText={handlePriceChange}
+                    placeholder="ادخال السعر الجديد"
+                    placeholderTextColor="#aaa"
+                  />
+
+                </View>
+
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.label}>ادخال الكمية  (اجباري)</Text>
+                  <TextInput
+                    style={styles.input}
+                    keyboardType="numeric"
+                    value={product.quantity}
+                    onChangeText={handleQuantityChange}
+                    placeholder="ادخل الكمية"
+                    placeholderTextColor="#aaa"
+                  />
+                </View>
+
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.label}>الملاحظات (اختياري)</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={product.notes}
+                    onChangeText={(text) => setProduct({ ...product, notes: text })}
+                    placeholder="ادخل الملاحظات"
+                    placeholderTextColor="#aaa"
+                  />
+                </View>
+              </>
+            )}
+          </>
+          );
+
+
 
           <TouchableOpacity
             style={styles.addButton}
@@ -1402,54 +1403,55 @@ return (
 
           <Text style={styles.sectionHeader}>متوسط السداد الشهري</Text>
 
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>نقدي</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              value={additionalFields.monthlyCash}
-              onChangeText={(text) =>
-                setAdditionalFields({
-                  ...additionalFields,
-                  monthlyCash: text,
-                })
-              }
-              placeholder="ادخل متوسط السداد نقدي"
-              placeholderTextColor="#aaa"
-            />
-          </View>
+          <KeyboardAvoidingView>
+            <ScrollView>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>نقدي</Text>
+                <TextInput
+                  style={styles.input}
+                  keyboardType="numeric"
+                  value={additionalFields.monthlyCash}
+                  onChangeText={(text) =>
+                    setAdditionalFields({
+                      ...additionalFields,
+                      monthlyCash: text,
+                    })
+                  }
+                  placeholder="ادخل متوسط السداد نقدي"
+                  placeholderTextColor="#aaa"
+                />
+              </View>
 
-          <View style={styles.fieldContainer}>
-            <Text style={styles.label}>آجل</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              value={additionalFields.monthlyCredit}
-              onChangeText={(text) =>
-                setAdditionalFields({
-                  ...additionalFields,
-                  monthlyCredit: text,
-                })
-              }
-              placeholder="ادخل متوسط السداد آجل"
-              placeholderTextColor="#aaa"
-            />
-          </View>
+              <View style={styles.fieldContainer}>
+                <Text style={styles.label}>آجل</Text>
+                <TextInput
+                  style={styles.input}
+                  keyboardType="numeric"
+                  value={additionalFields.monthlyCredit}
+                  onChangeText={(text) =>
+                    setAdditionalFields({
+                      ...additionalFields,
+                      monthlyCredit: text,
+                    })
+                  }
+                  placeholder="ادخل متوسط السداد آجل"
+                  placeholderTextColor="#aaa"
+                />
+              </View>
 
-          {userRole == "admin" && (
-  <>
-    
-  </>
-)}
+            </ScrollView>
+          </KeyboardAvoidingView>
 
         </>
+
+
       )}
 
       {step === 4 && (
         <OrderPreview
           client={client}
           region={region}
-          date={date}
+
           products={products}
           totalValue={totalValue}
           additionalFields={additionalFields}
@@ -1477,33 +1479,16 @@ return (
               <Text style={styles.submitButtonText}>إنشاء الطلبية</Text>
             </TouchableOpacity>
           )}
-           
+
         </View>
       )}
 
-      {/* Date Picker */}
-      {Platform.OS === "android" && isDatePickerVisible && (
-        <DateTimePicker
-          value={new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
 
-      {Platform.OS === "ios" && (
-        <DateTimePicker
-          value={new Date()}
-          mode="date"
-          display="spinner"
-          onChange={handleDateChange}
-        />
-      )}
 
       {isMapVisible && renderMapModal()}
 
       <Toast />
-  
+
     </ScrollView>
   );
 }
@@ -1546,21 +1531,7 @@ const styles = StyleSheet.create({
     height: 50,
     color: "#333",
   },
-  dateField: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 10,
-    padding: 14,
-    backgroundColor: "#fff",
-  },
-  dateText: {
-    fontSize: 16,
-    fontFamily: "Tajawal",
-    color: "#333",
-  },
+
   sectionTitle: {
     fontSize: 20,
     fontFamily: "Tajawal-Bold",
@@ -1637,6 +1608,7 @@ const styles = StyleSheet.create({
     marginBottom: 120,
   },
   navButton: {
+
     flex: 1,
     backgroundColor: "#f8f9fa",
     paddingVertical: 14,
@@ -1833,7 +1805,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
-  
+
   searchSeparator: {
     height: 1,
     backgroundColor: "#eee",
@@ -1954,27 +1926,21 @@ const styles = StyleSheet.create({
     fontFamily: "Tajawal-Medium",
   },
   editableLook: {
-  backgroundColor: '#e0f7fa',  // لون أزرق فاتح
-  borderColor: '#00bcd4',      // سماوي غامق
-  borderWidth: 1.5,
-  borderRadius: 6,
-  color: '#007c91',            // لون النص
-  fontWeight: 'bold',
-},
-hintText: {
-  color: '#007c91',    
-  fontSize: 12,         
-  fontStyle: 'italic',    
-  alignSelf: 'center', 
-  marginLeft: 8,          
-},
-  DesignedbyText:{
-    position:"absolute",
-    alignSelf:"center",
-    bottom:150,
-    color:"#D3D3D3",
-    fontFamily:"Tajawal"
-    
+    backgroundColor: '#e0f7fa',  // لون أزرق فاتح
+    borderColor: '#00bcd4',      // سماوي غامق
+    borderWidth: 1.5,
+    borderRadius: 6,
+    color: '#007c91',            // لون النص
+    fontWeight: 'bold',
   },
- 
+
+  DesignedbyText: {
+    position: "absolute",
+    alignSelf: "center",
+    bottom: 150,
+    color: "#D3D3D3",
+    fontFamily: "Tajawal"
+
+  },
+
 });

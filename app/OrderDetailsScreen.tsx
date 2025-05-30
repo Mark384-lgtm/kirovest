@@ -13,6 +13,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { getStoredToken } from "../services/ApiService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HomeScreen from "./screens/HomeScreen";
+import { router } from "expo-router";
 
 export default function OrderDetailsScreen() {
   const navigation = useNavigation();
@@ -23,6 +25,7 @@ export default function OrderDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
+
 
   useEffect(() => {
     checkUserRole();
@@ -53,7 +56,7 @@ export default function OrderDetailsScreen() {
 
       console.log("Accepting order:", orderId);
       const response = await fetch(
-        `https://kirovest.com/api/orders/${orderId}/update`,
+        `https://kirovest.org/api/orders/${orderId}/update`,
         {
           method: "POST",
           headers: {
@@ -98,7 +101,7 @@ export default function OrderDetailsScreen() {
 
       console.log("Rejecting order:", orderId);
       const response = await fetch(
-        `https://kirovest.com/api/orders/${orderId}/update`,
+        `https://kirovest.org/api/orders/${orderId}/update`,
         {
           method: "POST",
           headers: {
@@ -143,7 +146,7 @@ export default function OrderDetailsScreen() {
       if (!token) throw new Error("User not authenticated");
 
       const response = await fetch(
-        `https://kirovest.com/api/orders/${orderId}`,
+        `https://kirovest.org/api/orders/${orderId}`,
         {
           method: "GET",
           headers: {
@@ -172,6 +175,9 @@ export default function OrderDetailsScreen() {
     return (
       <ActivityIndicator size="large" color="#0066b3" style={styles.loader} />
     );
+
+
+    
   }
 
   if (error) {
@@ -196,7 +202,7 @@ export default function OrderDetailsScreen() {
           <Text style={styles.sectionTitle}>معلومات العميل</Text>
           <Text style={styles.detailText}>👤 الاسم: {order.client.name}</Text>
           <Text style={styles.detailText}>📍 المنطقة: {order.location}</Text>
-          <Text style={styles.detailText}>📅 التاريخ: {order.date}</Text>
+          <Text style={styles.detailText}>📅 التاريخ: {order.appointment}</Text>
         </View>
 
         {/* Product Details */}
@@ -204,6 +210,9 @@ export default function OrderDetailsScreen() {
           <Text style={styles.sectionTitle}>تفاصيل المنتجات</Text>
           {order.services.length > 0 ? (
             order.services.map((item, index) => (
+              console.log("scree", 'Orderdetailsscreen'),
+              console.log("price", item.price),
+              console.log("image", item.image),
               <View key={index} style={styles.productCard}>
                 <Text style={styles.productText}>
                   🔹 اسم المنتج: {item.title}
@@ -212,8 +221,9 @@ export default function OrderDetailsScreen() {
                   📦 الكمية: {item.quantity}
                 </Text>
                 <Text style={styles.productText}>
-                  💰 السعر: {item.price.amount} جنيه
+                  💰السعر {item.price.amount} جنيه
                 </Text>
+               
                 {item.image && (
                   <Image
                     source={{ uri: item.image.url }}
@@ -275,10 +285,13 @@ export default function OrderDetailsScreen() {
         {/* Back Button */}
         <TouchableOpacity
           style={styles.backButtonFooter}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }],
+          })}
         >
           <Icon name="arrow-back" size={20} color="#fff" />
-          <Text style={styles.backButtonText}>العودة</Text>
+          <Text style={styles.backButtonText}>العودة للرئيسية</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
