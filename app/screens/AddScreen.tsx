@@ -138,13 +138,14 @@ export default function AddScreen({ route, navigation }) {
       title: "نموذج طلب بضاعة",
       headerTitleAlign: "center",
       headerStyle: {
-        backgroundColor: "#f0f4f7",
+        backgroundColor: "#0066b3",
         writingDirection: "rtl",
       },
       headerTitleStyle: {
         fontFamily: "Tajawal",
         fontSize: 20,
         writingDirection: "rtl",
+        color: "#fff"
       },
     });
 
@@ -166,6 +167,7 @@ export default function AddScreen({ route, navigation }) {
 
     fetchClients();
     fetchProducts();
+    console.log("customer 1", clients[0]);
 
     // Request location permission when component mounts
     requestLocationPermission();
@@ -370,8 +372,8 @@ export default function AddScreen({ route, navigation }) {
         sales_permit: additionalFields.salePermission === "يصرح" ? "yes" : "no",
       };
 
-    
-      console.log("💵 Grand Total:", requestData.grand_total);
+      
+      console.log("Location_coordinates", requestData.location_coordinates);
       console.log("📤 Sending Request:", JSON.stringify(requestData));
 
       const response = await fetch("https://kirovest.org/api/orders/make", {
@@ -462,7 +464,6 @@ export default function AddScreen({ route, navigation }) {
         <Text style={styles.sectionHeader}>معلومات العميل</Text>
         <PreviewRow label="اسم العميل" value={client} />
         <PreviewRow label="المنطقة" value={region} />
-
       </View>
 
       <View style={styles.previewSection}>
@@ -571,6 +572,7 @@ export default function AddScreen({ route, navigation }) {
     try {
       const { coordinate } = event.nativeEvent;
       setSelectedLocation(coordinate);
+      console.log("selected location: ", coordinate);
       setSelectedCoordinates(coordinate);
 
       // Use reverse geocoding to get the address
@@ -583,6 +585,10 @@ export default function AddScreen({ route, navigation }) {
         if (data.results && data.results[0]) {
           setSelectedAddress(data.results[0].formatted_address);
           setRegion(data.results[0].formatted_address);
+          console.log("Formatted address: ", data.results[0].formatted_address);
+        }
+        else{
+          console.log("Geocode full response: ", JSON.stringify(data, null, 2));
         }
       } catch (error) {
         console.error("Error fetching address:", error);
@@ -1451,7 +1457,6 @@ export default function AddScreen({ route, navigation }) {
         <OrderPreview
           client={client}
           region={region}
-
           products={products}
           totalValue={totalValue}
           additionalFields={additionalFields}
@@ -1482,8 +1487,6 @@ export default function AddScreen({ route, navigation }) {
 
         </View>
       )}
-
-
 
       {isMapVisible && renderMapModal()}
 

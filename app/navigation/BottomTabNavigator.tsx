@@ -7,6 +7,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import HomeScreen from "../screens/HomeScreen";
 import AccountScreen from "../screens/AccountScreen";
 import AddScreen from "../screens/AddScreen";
+import OpenVisitScreen from "../screens/OpenVisitScreen";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +26,7 @@ export default function BottomTabNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          headerShown: false,
+          headerShown:true,
           tabBarIcon: ({ focused }) => (
             <View
               style={[
@@ -35,6 +37,31 @@ export default function BottomTabNavigator() {
               <View style={[focused && styles.focusedIconBackground]}>
                 <Icon
                   name="home-outline"
+                  size={24}
+                  color={focused ? "#0066b3" : "#fff"}
+                />
+              </View>
+            </View>
+          ),
+        }}
+      />
+
+
+            {/* OpenVisit Tab */}
+      <Tab.Screen
+        name="OpenVisit"
+        component={OpenVisitScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={[
+                styles.iconContainer,
+                focused && styles.focusedIconContainer,
+              ]}
+            >
+              <View style={[focused && styles.focusedIconBackground]}>
+                <Icon
+                  name="walk-outline"
                   size={24}
                   color={focused ? "#0066b3" : "#fff"}
                 />
@@ -58,7 +85,7 @@ export default function BottomTabNavigator() {
             >
               <View style={[focused && styles.focusedIconBackground]}>
                 <Icon
-                  name="add"
+                  name="cart"
                   size={24}
                   color={focused ? "#0066b3" : "#fff"}
                 />
@@ -67,6 +94,9 @@ export default function BottomTabNavigator() {
           ),
         }}
       />
+
+
+      
 
       {/* Account Tab */}
       <Tab.Screen
@@ -91,6 +121,9 @@ export default function BottomTabNavigator() {
           ),
         }}
       />
+
+
+
     </Tab.Navigator>
   );
 }

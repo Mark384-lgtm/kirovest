@@ -41,13 +41,14 @@ export default function AccountScreen() {
             title: "حسابي",
             headerTitleAlign: "center",
             headerStyle: {
-                backgroundColor: "#f0f4f7",
+                backgroundColor: "#0066b3",
                 writingDirection: "rtl",
             },
             headerTitleStyle: {
                 fontFamily: "Tajawal",
                 fontSize: 20,
                 writingDirection: "rtl",
+                color: "#fff"
             },
         });
     }, [navigation]);

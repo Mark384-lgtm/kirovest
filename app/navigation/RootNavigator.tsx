@@ -19,56 +19,58 @@ export default function RootNavigator() {
       initialRouteName="Main"
     >
       {/* Main Tabs */}
-      <Stack.Screen 
-        name="Main" 
-        component={BottomTabNavigator} 
-        options={{ headerShown: false}}
+      <Stack.Screen
+        name="Main"
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
       />
 
       {/* Standalone Screens with Headers */}
-      <Stack.Screen 
-        name="AddRoute" 
-        component={AddRouteScreen} 
-        options={{ headerShown: true}} 
+      <Stack.Screen
+        name="AddRoute"
+        component={AddRouteScreen}
+        options={{ headerShown: true }}
       />
-      <Stack.Screen 
-        name="OrdersScreen" 
-        component={OrdersScreen} 
-        options={{ headerShown: true}} 
+      <Stack.Screen
+        name="OrdersScreen"
+        component={OrdersScreen}
+        options={{ headerShown: true }}
       />
-      <Stack.Screen 
-        name="OrderDetailsScreen" 
-        component={OrderDetailsScreen} 
-        options={{ headerShown: true}} 
+      <Stack.Screen
+        name="OrderDetailsScreen"
+        component={OrderDetailsScreen}
+        options={{ headerShown: true }}
       />
-      <Stack.Screen 
-        name="ClientsScreen" 
-        component={ClientsScreen} 
-        options={{ headerShown: true}} 
+      <Stack.Screen
+        name="ClientsScreen"
+        component={ClientsScreen}
+        options={{ headerShown: true }}
       />
-      <Stack.Screen 
-        name="RoutesScreen" 
-        component={RoutesScreen} 
-        options={{ headerShown: true}} 
+      <Stack.Screen
+        name="RoutesScreen"
+        component={RoutesScreen}
+        options={{ headerShown: true }}
       />
-      <Stack.Screen 
-        name="ProductsScreen" 
-        component={ProductsScreen} 
-        options={{ headerShown: true}} 
+      <Stack.Screen
+        name="ProductsScreen"
+        component={ProductsScreen}
+        options={{ headerShown: true }}
       />
 
 
-  <Stack.Screen 
-  name="AddScreen" 
-  component={AddScreen}
-  />
-   <Stack.Screen 
-    name="Login" 
-    component={Login} 
-    options={{ headerShown: false }}
-        />
-    
+      <Stack.Screen
+        name="AddScreen"
+        component={AddScreen}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      
+
+
     </Stack.Navigator>
-    
+
   );
 }

@@ -102,22 +102,21 @@ export default function HomeScreen() {
         router.replace("/login");
       }
     };
-
     fetchUserData();
     fetchPendingOrdersCount();
     navigation.setOptions({
       title: "الرئيسية",
       headerTitleAlign: "center",
       headerStyle: {
-        backgroundColor: "#f0f4f7",
-        writingDirection: "rtl",
+        backgroundColor: "#0066b3",
       },
       headerTitleStyle: {
         fontFamily: "Tajawal",
         fontSize: 20,
-        writingDirection: "rtl",
-      },
+        color: "#fff"
+      }
     });
+
   }, [navigation]);
 
   return (
@@ -230,6 +229,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     direction: "rtl",
     gap: 10,
+    borderWidth:1,
+    borderColor:"#0066b3"
   },
 
   userImage: {
@@ -246,6 +247,7 @@ const styles = StyleSheet.create({
     flex: 1, // Allows text to take the remaining space
     alignItems: "flex-start", // Align text to the right for RTL
     justifyContent: "center",
+    
   },
 
   welcomeText: {
